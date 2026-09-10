@@ -33,7 +33,7 @@ N64_CFLAGS += -mabi=32 -mgp32 -mfp32 -msingle-float # Can't compile for 64bit AB
 #N64_CFLAGS += -flto
 
 N64_ASFLAGS = -mtune=vr4300 -march=vr4300 -Wa,--fatal-warnings
-N64_ASFLAGS =  -mabi=32 -mgp32 -mfp32 -msingle-float -G0
+N64_ASFLAGS += -mabi=32 -mgp32 -mfp32 -msingle-float -G0
 N64_RSPASFLAGS = -march=mips1 -mabi=32 -Wa,--fatal-warnings
 N64_LDFLAGS = -Wl,-T$(IPL3_LDSCRIPT) -Wl,-Map=build/ipl3.map -Wl,--gc-sections
 
@@ -53,6 +53,11 @@ else
 OBJS += build/loader.o build/debug.o build/boot_trampoline.o 
 IPL3_ROM=bin/ipl3_dev.z64
 IPL3_LDSCRIPT=ipl3_dev.ld
+endif
+
+# Support for restricting ROM to 4MB RDRAM even if Expansion Pak is present
+ifeq ($(LIBDRAGON_MAX_RDRAM_4MB),1)
+N64_CFLAGS += -DLIBDRAGON_MAX_RDRAM_4MB
 endif
 
 all: $(IPL3_ROM)
