@@ -332,6 +332,14 @@ void stage1(void)
         rsp_bzero_async(0xA0000400, memsize-0x400-TOTAL_RESERVED_SIZE);
     }
 
+    // Support for restricting ROM to 4MB RDRAM even if Expansion Pak is present
+    #ifdef LIBDRAGON_MAX_RDRAM_4MB
+    if (memsize > 0x400000) {
+        debugf("Restricting RDRAM to 4MB (from ", memsize, ")");
+        memsize = 0x400000;
+    }
+    #endif
+
     debugf("Total memory: ", memsize);
 
     // Copy the IPL3 stage2 (loader.c) from ROM to the end of RDRAM.
